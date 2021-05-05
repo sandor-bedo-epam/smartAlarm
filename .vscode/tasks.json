@@ -1,0 +1,31 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build docker image",
+            "type": "shell",
+            "command": "docker build -f Docker/Dockerfile -t esp32/develop_build .",
+            "problemMatcher": []
+        },
+        {
+            "label": "Start docker container",
+            "type": "shell",
+            "command": "docker-compose -f Docker/docker-compose.yml run --name esp32_make_dev_app dev-image bash",
+            "problemMatcher": []
+        },
+        {
+            "label": "Stop docker container",
+            "type": "shell",
+            "command": "docker-compose -f Docker/docker-compose.yml down",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build ESP32 project",
+            "type": "shell",
+            "command": " docker run --rm -it -v ${PWD}/Code:/home/develop/project -w /home/develop/project/. esp32/develop_build idf.py build",
+            "problemMatcher": []
+        }
+    ]
+}
