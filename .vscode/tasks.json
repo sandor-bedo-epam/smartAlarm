@@ -4,27 +4,47 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build docker image",
+            "label": "Docker Image Build",
             "type": "shell",
             "command": "docker build -f Docker/Dockerfile -t esp32/develop_build .",
             "problemMatcher": []
         },
+        // {
+        //     "label": "Start docker container",
+        //     "type": "shell",
+        //     "command": "docker-compose -f Docker/docker-compose.yml run --name esp32_make_dev_app dev-image bash",
+        //     "problemMatcher": []
+        // },
+        // {
+        //     "label": "Stop docker container",
+        //     "type": "shell",
+        //     "command": "docker-compose -f Docker/docker-compose.yml down",
+        //     "problemMatcher": []
+        // },
+
+        // https://matevarga.github.io/esp32/m5stack/esp-idf/wsl2/2020/05/31/flashing-esp32-under-wsl2.html
         {
-            "label": "Start docker container",
+            "label": "Mount COM port to TCP",
             "type": "shell",
-            "command": "docker-compose -f Docker/docker-compose.yml run --name esp32_make_dev_app dev-image bash",
+            "command": "${relativeFileDirname}\\..\\Scripts\\hub4com-2.1.0.0-386\\com2tcp-rfc2217.bat COM4 5555",
             "problemMatcher": []
         },
         {
-            "label": "Stop docker container",
+            "label": "ESP32 project - Build",
             "type": "shell",
-            "command": "docker-compose -f Docker/docker-compose.yml down",
+            "command": "docker run --rm -it -v ${PWD}/Code:/home/develop/project -w /home/develop/project/. esp32/develop_build idf.py build",
             "problemMatcher": []
         },
         {
-            "label": "Build ESP32 project",
+            "label": "ESP32 project - Flash",
             "type": "shell",
-            "command": " docker run --rm -it -v ${PWD}/Code:/home/develop/project -w /home/develop/project/. esp32/develop_build idf.py build",
+            "command": "docker run --rm -it -v ${PWD}/Code:/home/develop/project -w /home/develop/project/. esp32/develop_build idf.py flash -b 460800 -p rfc2217://192.168.0.128:5555",
+            "problemMatcher": []
+        },
+        {
+            "label": "ESP32 project - Clean",
+            "type": "shell",
+            "command": "docker run --rm -it -v ${PWD}/Code:/home/develop/project -w /home/develop/project/. esp32/develop_build idf.py clean",
             "problemMatcher": []
         }
     ]
