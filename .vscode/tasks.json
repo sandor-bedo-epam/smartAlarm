@@ -42,6 +42,12 @@
             "problemMatcher": []
         },
         {
+            "label": "ESP32 project - Monitor",
+            "type": "shell",
+            "command": "docker run --rm -it -v ${PWD}/Code:/home/develop/project -w /home/develop/project/. esp32/develop_build idf.py monitor -p rfc2217://192.168.0.128:5555",
+            "problemMatcher": []
+        },
+        {
             "label": "ESP32 project - Clean",
             "type": "shell",
             "command": "docker run --rm -it -v ${PWD}/Code:/home/develop/project -w /home/develop/project/. esp32/develop_build idf.py clean",
