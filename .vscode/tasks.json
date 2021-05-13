@@ -42,9 +42,15 @@
             "problemMatcher": []
         },
         {
-            "label": "ESP32 project - Monitor",
+            "label": "ESP32 project - Start Monitor",
             "type": "shell",
-            "command": "docker run --rm -it -v ${PWD}/Code:/home/develop/project -w /home/develop/project/. esp32/develop_build idf.py monitor -p rfc2217://192.168.0.128:5555",
+            "command": "docker run --rm -it -v ${PWD}/Code:/home/develop/project -w /home/develop/project/. --name esp32_develop_container esp32/develop_build idf.py monitor -p rfc2217://192.168.0.128:5555",
+            "problemMatcher": []
+        },
+        {
+            "label": "ESP32 project - Stop Monitor",
+            "type": "shell",
+            "command": "docker stop esp32_develop_container",
             "problemMatcher": []
         },
         {
