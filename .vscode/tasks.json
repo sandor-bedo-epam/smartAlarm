@@ -9,18 +9,18 @@
             "command": "docker build -f Docker/Dockerfile -t esp32/develop_build .",
             "problemMatcher": []
         },
-        // {
-        //     "label": "Start docker container",
-        //     "type": "shell",
-        //     "command": "docker-compose -f Docker/docker-compose.yml run --name esp32_make_dev_app dev-image bash",
-        //     "problemMatcher": []
-        // },
-        // {
-        //     "label": "Stop docker container",
-        //     "type": "shell",
-        //     "command": "docker-compose -f Docker/docker-compose.yml down",
-        //     "problemMatcher": []
-        // },
+        {
+            "label": "Start docker container",
+            "type": "shell",
+            "command": "docker-compose -f Docker/docker-compose.yml run --name esp32_make_dev_app dev-image bash",
+            "problemMatcher": []
+        },
+        {
+            "label": "Stop docker container",
+            "type": "shell",
+            "command": "docker-compose -f Docker/docker-compose.yml down",
+            "problemMatcher": []
+        },
 
         // https://matevarga.github.io/esp32/m5stack/esp-idf/wsl2/2020/05/31/flashing-esp32-under-wsl2.html
         {
