@@ -21,12 +21,17 @@
             "command": "docker-compose -f Docker/docker-compose.yml down",
             "problemMatcher": []
         },
-
         // https://matevarga.github.io/esp32/m5stack/esp-idf/wsl2/2020/05/31/flashing-esp32-under-wsl2.html
         {
-            "label": "Mount COM port to TCP",
+            "label": "Mount COM4 port to TCP",
             "type": "shell",
             "command": "${relativeFileDirname}\\..\\Scripts\\hub4com-2.1.0.0-386\\com2tcp-rfc2217.bat COM4 5555",
+            "problemMatcher": []
+        },
+        {
+            "label": "Mount COM9 port to TCP",
+            "type": "shell",
+            "command": "${relativeFileDirname}\\..\\Scripts\\hub4com-2.1.0.0-386\\com2tcp-rfc2217.bat COM9 5555",
             "problemMatcher": []
         },
         {
@@ -42,9 +47,21 @@
             "problemMatcher": []
         },
         {
+            "label": "ESP32 project - Flash (RK home)",
+            "type": "shell",
+            "command": "docker run --rm -it -v ${PWD}/Code:/home/develop/project -w /home/develop/project/. esp32/develop_build idf.py flash -b 460800 -p rfc2217://192.168.1.19:5555",
+            "problemMatcher": []
+        },
+        {
             "label": "ESP32 project - Start Monitor",
             "type": "shell",
             "command": "docker run --rm -it -v ${PWD}/Code:/home/develop/project -w /home/develop/project/. --name esp32_develop_container esp32/develop_build idf.py monitor -p rfc2217://192.168.0.128:5555",
+            "problemMatcher": []
+        },
+        {
+            "label": "ESP32 project - Start Monitor (RK home)",
+            "type": "shell",
+            "command": "docker run --rm -it -v ${PWD}/Code:/home/develop/project -w /home/develop/project/. --name esp32_develop_container esp32/develop_build idf.py monitor -p rfc2217://192.168.1.19:5555",
             "problemMatcher": []
         },
         {
