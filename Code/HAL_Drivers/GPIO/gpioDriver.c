@@ -118,8 +118,27 @@ GPIO_DriverRetVal_e gpioDriverTogglePin(GPIO_DriverGPIOConfig_s *pGPIOPin_i)
     return driverRetVal;
 }
 
-GPIO_DriverRetVal_e gpioDriverReadPin(GPIO_DriverGPIOConfig_s* pGPIOPin_i, uint8_t* pData_o)
+GPIO_DriverRetVal_e gpioDriverReadPin(GPIO_DriverGPIOConfig_s *pGPIOPin_i, uint8_t *pData_o)
 {
     *pData_o = (uint8_t)gpio_get_level(pGPIOPin_i->GPIO_Pin_Number);
     return GPIO_DriverRetVal_OK;
+}
+
+GPIO_DriverRetVal_e gpioDriver_Init(GPIO_DriverGPIOConfig_s *pGPIOPinsArray_i, uint8_t GPIOPinsArrayLen_i)
+{
+    GPIO_DriverRetVal_e driverRetVal;
+    uint8_t i;
+    driverRetVal = GPIO_DriverRetVal_OK;
+    for (i = 0; (i < GPIOPinsArrayLen_i && driverRetVal == GPIO_DriverRetVal_OK); i++)
+    {
+        if (pGPIOPinsArray_i[i].GPIO_Mode == GPIO_DriverGPIO_MODE_OUTPUT)
+        {
+            driverRetVal = gpioDriverPinInit_Output(&pGPIOPinsArray_i[i]);
+        }
+        else
+        {
+            driverRetVal = gpioDriverPinInit_Input(&pGPIOPinsArray_i[i]);
+        }
+    }
+    return driverRetVal;
 }

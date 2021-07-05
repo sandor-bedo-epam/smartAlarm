@@ -27,7 +27,7 @@ typedef enum
 {
 	GPIO_DriverGPIO_MODE_DISABLE = 0,
 	GPIO_DriverGPIO_MODE_INPUT = GPIO_MODE_INPUT,
-	GPIO_DriverGPIO_MODE_OUTPUT = GPIO_MODE_INPUT_OUTPUT	
+	GPIO_DriverGPIO_MODE_OUTPUT = GPIO_MODE_INPUT_OUTPUT
 } GPIO_DriverGPIOMode_e; // For ESP32 see gpio_pull_mode_t enum
 
 typedef enum
@@ -63,7 +63,7 @@ static GPIO_DriverGPIOConfig_s GPIO_DriverGPIOPeripherals[GPIO_DriverGPIOPeriphe
 		[GPIO_DriverGPIOButton1_i] = {.GPIO_Pin_Port = 0, .GPIO_Pin_Number = 34, .GPIO_Mode = GPIO_DriverGPIO_MODE_INPUT, .GPIO_PullUpDown_Selector = GPIO_DriverGPIO_PULLUP_ONLY},
 		[GPIO_DriverGPIOButton2_i] = {.GPIO_Pin_Port = 0, .GPIO_Pin_Number = 35, .GPIO_Mode = GPIO_DriverGPIO_MODE_INPUT, .GPIO_PullUpDown_Selector = GPIO_DriverGPIO_PULLUP_ONLY}};
 
-//GPIO_DriverRetVal_e gpioDriver_Init(void);
+GPIO_DriverRetVal_e gpioDriver_Init(GPIO_DriverGPIOConfig_s *pGPIOPinsArray_i, uint8_t GPIOPinsArrayLen_i);
 //GPIO_DriverRetVal_e gpioDriver_DeInit(void);
 
 GPIO_DriverRetVal_e gpioDriverPinInit_Input(GPIO_DriverGPIOConfig_s *pGPIOPin_i);
