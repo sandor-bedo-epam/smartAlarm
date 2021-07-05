@@ -142,3 +142,15 @@ GPIO_DriverRetVal_e gpioDriver_Init(GPIO_DriverGPIOConfig_s *pGPIOPinsArray_i, u
     }
     return driverRetVal;
 }
+
+GPIO_DriverRetVal_e gpioDriver_DeInit(GPIO_DriverGPIOConfig_s *pGPIOPinsArray_i, uint8_t GPIOPinsArrayLen_i)
+{
+    GPIO_DriverRetVal_e driverRetVal;
+    uint8_t i;
+    driverRetVal = GPIO_DriverRetVal_OK;
+    for (i = 0; (i < GPIOPinsArrayLen_i && driverRetVal == GPIO_DriverRetVal_OK); i++)
+    {
+        driverRetVal = gpioDriverPinDeInit(&pGPIOPinsArray_i[i]);
+    }
+    return driverRetVal;
+}
