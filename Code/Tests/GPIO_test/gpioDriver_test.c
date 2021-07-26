@@ -2,12 +2,36 @@
 
 static const char *TAG = "GPIO Driver Test";
 
+
+
 static GPIO_DriverGPIOConfig_s GPIO_DriverGPIOPeripherals[GPIO_DriverGPIOPeripheral_End] =
     {
-        [GPIO_DriverGPIOLed1_o] = {.GPIO_Pin_Port = 0, .GPIO_Pin_Number = 26, .GPIO_Mode = GPIO_DriverGPIO_MODE_OUTPUT, .GPIO_PullUpDown_Selector = GPIO_DriverGPIO_FLOATING},
-        [GPIO_DriverGPIOLed2_o] = {.GPIO_Pin_Port = 0, .GPIO_Pin_Number = 25, .GPIO_Mode = GPIO_DriverGPIO_MODE_OUTPUT, .GPIO_PullUpDown_Selector = GPIO_DriverGPIO_FLOATING},
-        [GPIO_DriverGPIOButton1_i] = {.GPIO_Pin_Port = 0, .GPIO_Pin_Number = 34, .GPIO_Mode = GPIO_DriverGPIO_MODE_INPUT, .GPIO_PullUpDown_Selector = GPIO_DriverGPIO_PULLUP_ONLY},
-        [GPIO_DriverGPIOButton2_i] = {.GPIO_Pin_Port = 0, .GPIO_Pin_Number = 35, .GPIO_Mode = GPIO_DriverGPIO_MODE_INPUT, .GPIO_PullUpDown_Selector = GPIO_DriverGPIO_PULLUP_ONLY}};
+        [GPIO_DriverGPIOLed1_o] = {
+                        .GPIO_Pin_Port = 0, 
+                        .GPIO_Pin_Number = 26, 
+                        .GPIO_Mode = GPIO_DriverGPIO_MODE_OUTPUT, 
+                        .GPIO_PullUpDown_Selector = GPIO_DriverGPIO_FLOATING
+                        },
+        [GPIO_DriverGPIOLed2_o] = {
+                        .GPIO_Pin_Port = 0, 
+                        .GPIO_Pin_Number = 25, 
+                        .GPIO_Mode = GPIO_DriverGPIO_MODE_OUTPUT, 
+                        .GPIO_PullUpDown_Selector = GPIO_DriverGPIO_FLOATING
+                        },
+        [GPIO_DriverGPIOButton1_i] = {
+                        .GPIO_Pin_Port = 0, 
+                        .GPIO_Pin_Number = 34, 
+                        .GPIO_Mode = GPIO_DriverGPIO_MODE_INPUT, 
+                        .GPIO_PullUpDown_Selector = GPIO_DriverGPIO_PULLUP_ONLY
+                        },
+        [GPIO_DriverGPIOButton2_i] = {
+                        .GPIO_Pin_Port = 0, 
+                        .GPIO_Pin_Number = 35, 
+                        .GPIO_Mode = GPIO_DriverGPIO_MODE_INPUT, 
+                        .GPIO_PullUpDown_Selector = GPIO_DriverGPIO_PULLUP_ONLY
+                        }
+    };
+
 
 void gpio_driver_out_task(void *pvParameter)
 {

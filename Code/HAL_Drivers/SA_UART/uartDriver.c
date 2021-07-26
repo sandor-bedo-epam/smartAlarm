@@ -25,8 +25,12 @@ UART_DriverRetVal_e UART_DriverUARTInit(UART_DriverUARTConfig_s *pUARTPeripheral
         case 7:
             driver_uart_config.data_bits = UART_DATA_7_BITS;
             break;
+        case 8:
+            driver_uart_config.data_bits = UART_DATA_8_BITS;
+            break;
         default:
             driver_uart_config.data_bits = UART_DATA_8_BITS;
+            ret_val = UART_DriverRetVal_NOK;
             break;
         }
         switch (pUARTPeripheral_i->UART_stop_bits)
@@ -39,6 +43,7 @@ UART_DriverRetVal_e UART_DriverUARTInit(UART_DriverUARTConfig_s *pUARTPeripheral
             break;
         default:
             driver_uart_config.stop_bits = UART_STOP_BITS_1;
+            ret_val = UART_DriverRetVal_NOK;
             break;
         }
         switch (pUARTPeripheral_i->UART_parity)
@@ -49,8 +54,12 @@ UART_DriverRetVal_e UART_DriverUARTInit(UART_DriverUARTConfig_s *pUARTPeripheral
         case UART_DriverParity_Odd:
             driver_uart_config.parity = UART_PARITY_ODD;
             break;
+        case UART_DriverParity_Disable:
+            driver_uart_config.parity = UART_PARITY_DISABLE;
+            break;
         default:
             driver_uart_config.parity = UART_PARITY_DISABLE;
+            ret_val = UART_DriverRetVal_NOK;
             break;
         }
         driver_uart_config.flow_ctrl = UART_HW_FLOWCTRL_DISABLE;
