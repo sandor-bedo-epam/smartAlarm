@@ -13,6 +13,13 @@
 #include "esp_system.h"
 #include "esp_spi_flash.h"
 
+#include "esp_log.h"
+#include "esp_err.h"
+
+#include "gpioDriver_test.h"
+
+static const char *TAG = "Driver Test";
+
 void app_main(void)
 {
     printf("Hello world!\n");
@@ -21,19 +28,24 @@ void app_main(void)
     esp_chip_info_t chip_info;
     esp_chip_info(&chip_info);
     printf("This is %s chip with %d CPU core(s), WiFi%s%s, ",
-            CONFIG_IDF_TARGET,
-            chip_info.cores,
-            (chip_info.features & CHIP_FEATURE_BT) ? "/BT" : "",
-            (chip_info.features & CHIP_FEATURE_BLE) ? "/BLE" : "");
+           CONFIG_IDF_TARGET,
+           chip_info.cores,
+           (chip_info.features & CHIP_FEATURE_BT) ? "/BT" : "",
+           (chip_info.features & CHIP_FEATURE_BLE) ? "/BLE" : "");
 
     printf("silicon revision %d, ", chip_info.revision);
 
     printf("%dMB %s flash\n", spi_flash_get_chip_size() / (1024 * 1024),
-            (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
+           (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
 
     printf("Minimum free heap size: %d bytes\n", esp_get_minimum_free_heap_size());
 
-    for (int i = 10; i >= 0; i--) {
+    ESP_LOGI(TAG, "Create GPIO Driver Test Task");
+    xTaskCreate(&gpio_driver_out_task, "gpio_driver_out_task", 2048, NULL, 5, NULL);
+
+    vTaskDelay(20 * 1000 / portTICK_PERIOD_MS);
+    for (int i = 10; i >= 0; i--)
+    {
         printf("Restarting in %d seconds...\n", i);
         vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
