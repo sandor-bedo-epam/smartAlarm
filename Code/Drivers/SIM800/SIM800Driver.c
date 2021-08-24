@@ -15,28 +15,32 @@ SIM800_DriverRetVal_e SIM800_DriverSIM800_Init(SIM800_DriverSIM800Config_s *pSIM
 
     SIM800_DriverRetVal_e driverRetVal;
     driverRetVal = SIM800_DriverRetVal_OK;
-    if (driverRetVal == SIM800_DriverRetVal_OK)
+
+    do
     {
         if (gpioDriverPinInit_Output(&(pSIM800Modem_i->Pin_PWKEY)) != GPIO_DriverRetVal_OK)
         {
             driverRetVal = SIM800_DriverRetVal_NOK;
+            break;
         }
-    }
-    if (driverRetVal == SIM800_DriverRetVal_OK)
-    {
+
         if (gpioDriverPinInit_Output(&(pSIM800Modem_i->Pin_RST)) != GPIO_DriverRetVal_OK)
         {
             driverRetVal = SIM800_DriverRetVal_NOK;
+            break;
         }
-    }
-    if (driverRetVal == SIM800_DriverRetVal_OK)
-    {
+
         if (gpioDriverPinInit_Output(&(pSIM800Modem_i->Pin_POWERON)) != GPIO_DriverRetVal_OK)
         {
             driverRetVal = SIM800_DriverRetVal_NOK;
+            break;
         }
-    }
+    } while ( 0 );
+    
+
     vTaskDelay(pdMS_TO_TICKS(10));
+
+
     if (driverRetVal == SIM800_DriverRetVal_OK)
     {
         if (gpioDriverSetPin_Level(&(pSIM800Modem_i->Pin_PWKEY), GPIO_DriverGPIOLevel_Low) != GPIO_DriverRetVal_OK)
