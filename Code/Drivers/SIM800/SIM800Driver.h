@@ -11,8 +11,9 @@
 #include "gpioDriver.h"
 #include "uartDriver.h"
 
-#define SIM800_INIT_WAIT (4000U)
-#define SIM800_OK_Str "OK"
+#define SIM800_INIT_WAIT (3500U)
+#define SIM800_PWKEY_PULSE_WAIT (1300U)
+#define SIM800_OK_Str ("\r\nOK\r\n")
 
 typedef enum
 {
@@ -31,9 +32,10 @@ typedef struct
 
 typedef struct
 {
-    char *   command;
-    uint16_t commandSize;
-    char *   responseOnOk;
+    char *command;
+    char *responseOnOk;
+    char *responseOnNotOk[3];
+    uint16_t numOfNotOkResponses;
     uint16_t timeoutMs;
     uint16_t delayMs;
 } SIM800_Command_s;
