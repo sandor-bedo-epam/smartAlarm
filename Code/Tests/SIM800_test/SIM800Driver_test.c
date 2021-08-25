@@ -10,7 +10,7 @@ static const char tag[] = "SIM800Driver_Test";
 
 static const int TEST_UART_BUF_SIZE = 1024;
 
-SIM800_DriverSIM800Config_s Test_SIM800_Config = {
+SIM800Driver_SIM800Config_s Test_SIM800_Config = {
     .Pin_PWKEY = {.GPIO_Pin_Number = PIN_MODEM_PWKEY,
                   .GPIO_Pin_Port = 0,
                   .GPIO_Mode = GPIO_DriverGPIO_MODE_OUTPUT,
@@ -33,32 +33,32 @@ SIM800_DriverSIM800Config_s Test_SIM800_Config = {
                     .UART_TxGPIO_Pin = PIN_MODEM_TX,
                     .UART_RxGPIO_Pin = PIN_MODEM_RX}};
 
-SIM800_DriverRetVal_e sim800_driver_test(void)
+SIM800Driver_RetVal_e sim800_driver_test(void)
 {
     char modem_info[SIM800_MODEM_INFO_MAX_LEN + 1];
 
-    SIM800_DriverRetVal_e testRetVal;
-    testRetVal = SIM800_DriverRetVal_OK;
-    if (SIM800_DriverSIM800_Init(&Test_SIM800_Config) == SIM800_DriverRetVal_OK)
+    SIM800Driver_RetVal_e testRetVal;
+    testRetVal = SIM800Driver_RetVal_OK;
+    if (SIM800Driver_SIM800_Init(&Test_SIM800_Config) == SIM800Driver_RetVal_OK)
     {
         ESP_LOGI(tag, "SIM800 Init successful");
     }
     else
     {
         ESP_LOGE(tag, "SIM800 Init failed");
-        testRetVal = SIM800_DriverRetVal_NOK;
+        testRetVal = SIM800Driver_RetVal_NOK;
     }
-    if (testRetVal == SIM800_DriverRetVal_OK)
+    if (testRetVal == SIM800Driver_RetVal_OK)
     {
         ESP_LOGI(tag, "Querying SIM800 modem info");
-        if (SIM800Driver_SIM800_GetModemInfo(&Test_SIM800_Config, modem_info) == SIM800_DriverRetVal_OK)
+        if (SIM800Driver_SIM800_GetModemInfo(&Test_SIM800_Config, modem_info) == SIM800Driver_RetVal_OK)
         {
             ESP_LOGI(tag, "SIM800 modem info: %s", modem_info);
         }
         else
         {
             ESP_LOGE(tag, "SIM800 modem info invalid: %s", modem_info);
-            testRetVal = SIM800_DriverRetVal_NOK;
+            testRetVal = SIM800Driver_RetVal_NOK;
         }
     }
     return testRetVal;

@@ -18,10 +18,10 @@
 
 typedef enum
 {
-    SIM800_DriverRetVal_OK = 0,
-    SIM800_DriverRetVal_NOK,
-    SIM800_DriverRetVal_End
-} SIM800_DriverRetVal_e;
+    SIM800Driver_RetVal_OK = 0,
+    SIM800Driver_RetVal_NOK,
+    SIM800Driver_RetVal_End
+} SIM800Driver_RetVal_e;
 
 typedef struct
 {
@@ -29,7 +29,7 @@ typedef struct
     GPIO_DriverGPIOConfig_s Pin_RST;
     GPIO_DriverGPIOConfig_s Pin_POWERON;
     UART_DriverUARTConfig_s SIM800_UART;
-} SIM800_DriverSIM800Config_s;
+} SIM800Driver_SIM800Config_s;
 
 typedef struct
 {
@@ -41,8 +41,8 @@ typedef struct
     uint16_t delayMs;
 } SIM800_Command_s;
 
-SIM800_DriverRetVal_e SIM800_DriverSIM800_Init(SIM800_DriverSIM800Config_s *pSIM800Modem_i);
-SIM800_DriverRetVal_e SIM800Driver_SIM800_SendATcommand(SIM800_DriverSIM800Config_s *pSIM800Modem_i,
+SIM800Driver_RetVal_e SIM800Driver_SIM800_Init(SIM800Driver_SIM800Config_s *pSIM800Modem_i);
+SIM800Driver_RetVal_e SIM800Driver_SIM800_SendATcommand(SIM800Driver_SIM800Config_s *pSIM800Modem_i,
                                                         SIM800_Command_s *           pATcommand_i);
-SIM800_DriverRetVal_e SIM800Driver_SIM800_GetModemInfo(SIM800_DriverSIM800Config_s *pSIM800Modem_i,
+SIM800Driver_RetVal_e SIM800Driver_SIM800_GetModemInfo(SIM800Driver_SIM800Config_s *pSIM800Modem_i,
                                                        char *                       pModemInfo_o);
