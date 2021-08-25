@@ -14,6 +14,7 @@
 #define SIM800_INIT_WAIT (3500U)
 #define SIM800_PWKEY_PULSE_WAIT (1300U)
 #define SIM800_OK_Str ("\r\nOK\r\n")
+#define SIM800_MODEM_INFO_MAX_LEN (64U)
 
 typedef enum
 {
@@ -32,12 +33,16 @@ typedef struct
 
 typedef struct
 {
-    char *command;
-    char *responseOnOk;
-    char *responseOnNotOk[3];
+    char *   command;
+    char *   responseOnOk;
+    char *   responseOnNotOk[3];
     uint16_t numOfNotOkResponses;
     uint16_t timeoutMs;
     uint16_t delayMs;
 } SIM800_Command_s;
 
 SIM800_DriverRetVal_e SIM800_DriverSIM800_Init(SIM800_DriverSIM800Config_s *pSIM800Modem_i);
+SIM800_DriverRetVal_e SIM800Driver_SIM800_SendATcommand(SIM800_DriverSIM800Config_s *pSIM800Modem_i,
+                                                        SIM800_Command_s *           pATcommand_i);
+SIM800_DriverRetVal_e SIM800Driver_SIM800_GetModemInfo(SIM800_DriverSIM800Config_s *pSIM800Modem_i,
+                                                       char *                       pModemInfo_o);

@@ -6,7 +6,7 @@
 #define PIN_MODEM_TX 27
 #define PIN_MODEM_RX 26
 
-static const char tag[] = "SIM800Driver Test";
+static const char tag[] = "SIM800Driver_Test";
 
 static const int TEST_UART_BUF_SIZE = 1024;
 
@@ -35,6 +35,10 @@ SIM800_DriverSIM800Config_s Test_SIM800_Config = {
 
 SIM800_DriverRetVal_e sim800_driver_test(void)
 {
+    char modem_info[SIM800_MODEM_INFO_MAX_LEN + 1];
+
+    SIM800_DriverRetVal_e testRetVal;
+    testRetVal = SIM800_DriverRetVal_OK;
     if (SIM800_DriverSIM800_Init(&Test_SIM800_Config) == SIM800_DriverRetVal_OK)
     {
         ESP_LOGI(tag, "SIM800 Init successful");
@@ -42,7 +46,20 @@ SIM800_DriverRetVal_e sim800_driver_test(void)
     else
     {
         ESP_LOGE(tag, "SIM800 Init failed");
-        return SIM800_DriverRetVal_NOK;
+        testRetVal = SIM800_DriverRetVal_NOK;
     }
-    return SIM800_DriverRetVal_OK;
+    if (testRetVal == SIM800_DriverRetVal_OK)
+    {
+        ESP_LOGI(tag, "Querying SIM800 modem info");
+        if (SIM800Driver_SIM800_GetModemInfo(&Test_SIM800_Config, modem_info) == SIM800_DriverRetVal_OK)
+        {
+            ESP_LOGI(tag, "SIM800 modem info: %s", modem_info);
+        }
+        else
+        {
+            ESP_LOGE(tag, "SIM800 modem info invalid: %s", modem_info);
+            testRetVal = SIM800_DriverRetVal_NOK;
+        }
+    }
+    return testRetVal;
 }

@@ -16,14 +16,17 @@ static SIM800_Command_s cmd_ATinfo = {.command = "ATI\r\n",
                                       .timeoutMs = 250,
                                       .delayMs = 50};
 
+/**
+ * @brief SIM800 Driver initialization
+ */
 SIM800_DriverRetVal_e SIM800_DriverSIM800_Init(SIM800_DriverSIM800Config_s *pSIM800Modem_i)
 {
     uint8_t rx_buffer[32];
-    int rx_bytes;
+    int     rx_bytes;
 
     SIM800_DriverRetVal_e driverRetVal;
     driverRetVal = SIM800_DriverRetVal_OK;
-    ESP_LOGI(tag, "Initializing SIM800 modem");
+    ESP_LOGI(tag, "Initializing SIM800 modem GPIO pins");
     do
     {
         if (gpioDriverPinInit_Output(&(pSIM800Modem_i->Pin_PWKEY)) != GPIO_DriverRetVal_OK)
@@ -64,11 +67,6 @@ SIM800_DriverRetVal_e SIM800_DriverSIM800_Init(SIM800_DriverSIM800Config_s *pSIM
             break;
         }
         vTaskDelay(pdMS_TO_TICKS(10));
-        if (UART_DriverUARTInit(&(pSIM800Modem_i->SIM800_UART)) != UART_DriverRetVal_OK)
-        {
-            driverRetVal = SIM800_DriverRetVal_NOK;
-            break;
-        }
         if (gpioDriverSetPin_Level(&(pSIM800Modem_i->Pin_PWKEY), GPIO_DriverGPIOLevel_High) != GPIO_DriverRetVal_OK)
         {
             driverRetVal = SIM800_DriverRetVal_NOK;
@@ -83,6 +81,15 @@ SIM800_DriverRetVal_e SIM800_DriverSIM800_Init(SIM800_DriverSIM800Config_s *pSIM
         break;
     }
 
+    if (driverRetVal == SIM800_DriverRetVal_OK)
+    {
+        ESP_LOGI(tag, "Initializing SIM800 modem UART");
+        if (UART_DriverUARTInit(&(pSIM800Modem_i->SIM800_UART)) != UART_DriverRetVal_OK)
+        {
+            driverRetVal = SIM800_DriverRetVal_NOK;
+        }
+    }
+
     while (driverRetVal == SIM800_DriverRetVal_OK)
     {
         vTaskDelay(pdMS_TO_TICKS(SIM800_INIT_WAIT));
@@ -91,28 +98,56 @@ SIM800_DriverRetVal_e SIM800_DriverSIM800_Init(SIM800_DriverSIM800Config_s *pSIM
         vTaskDelay(pdMS_TO_TICKS(cmd_AT.delayMs));
         memset(rx_buffer, 0, sizeof(rx_buffer));
         rx_bytes = UART_DriverReceiveData(&(pSIM800Modem_i->SIM800_UART), rx_buffer, sizeof(rx_buffer) - 1);
-        if (strcmp((char *)rx_buffer, cmd_AT.responseOnOk) != 0)
+        if (rx_bytes > 0 && strcmp((char *)rx_buffer, cmd_AT.responseOnOk) != 0)
         {
             driverRetVal = SIM800_DriverRetVal_NOK;
-            break;
         }
-        ESP_LOGI(tag, "Testing SIM800 modem's response to ATI command");
-        UART_DriverSendData(&(pSIM800Modem_i->SIM800_UART), cmd_ATinfo.command, strlen(cmd_ATinfo.command));
-        vTaskDelay(pdMS_TO_TICKS(cmd_ATinfo.delayMs));
-        memset(rx_buffer, 0, sizeof(rx_buffer));
-        rx_bytes = UART_DriverReceiveData(&(pSIM800Modem_i->SIM800_UART), rx_buffer, sizeof(rx_buffer) - 1);
-        ESP_LOGI(tag, "Read %d bytes: '%s'", rx_bytes, rx_buffer);
-        ESP_LOG_BUFFER_HEXDUMP(tag, rx_buffer, rx_bytes, ESP_LOG_INFO);
-        rx_buffer[strlen(cmd_ATinfo.responseOnOk)] = 0;
-        if (strcmp((char *)rx_buffer, cmd_ATinfo.responseOnOk) != 0)
-        {
-            driverRetVal = SIM800_DriverRetVal_NOK;
-            ESP_LOGE(tag, "Response to ATI command is not OK");
-            break;
-        }
-
         break;
     }
 
+    return driverRetVal;
+}
+
+SIM800_DriverRetVal_e SIM800Driver_SIM800_SendATcommand(SIM800_DriverSIM800Config_s *pSIM800Modem_i,
+                                                        SIM800_Command_s *           pATcommand_i)
+{
+    SIM800_DriverRetVal_e driverRetVal;
+    driverRetVal = SIM800_DriverRetVal_OK;
+    if (UART_DriverSendData(&(pSIM800Modem_i->SIM800_UART), pATcommand_i->command, strlen(pATcommand_i->command)) ==
+        UART_DriverRetVal_OK)
+    {
+        vTaskDelay(pdMS_TO_TICKS(cmd_ATinfo.delayMs));
+    }
+    else
+    {
+        driverRetVal = SIM800_DriverRetVal_NOK;
+    }
+    return driverRetVal;
+}
+
+SIM800_DriverRetVal_e SIM800Driver_SIM800_GetModemInfo(SIM800_DriverSIM800Config_s *pSIM800Modem_i, char *pModemInfo_o)
+{
+    uint8_t rx_buffer[SIM800_MODEM_INFO_MAX_LEN];
+    int     rx_bytes;
+    uint8_t response_len;
+
+    SIM800_DriverRetVal_e driverRetVal;
+    driverRetVal = SIM800_DriverRetVal_OK;
+    response_len = strlen(cmd_ATinfo.responseOnOk);
+
+    ESP_LOGI(tag, "Testing SIM800 modem's response to ATI command");
+    SIM800Driver_SIM800_SendATcommand(pSIM800Modem_i, &cmd_ATinfo);
+    memset(rx_buffer, 0, sizeof(rx_buffer));
+    rx_bytes = UART_DriverReceiveData(&(pSIM800Modem_i->SIM800_UART), rx_buffer, sizeof(rx_buffer) - 1);
+    ESP_LOGI(tag, "Read %d bytes", rx_bytes);
+    strcpy(pModemInfo_o, (char *)rx_buffer);
+    if (rx_bytes > response_len)
+    {
+        rx_buffer[response_len] = 0;
+    }
+    if (strcmp((char *)rx_buffer, cmd_ATinfo.responseOnOk) != 0)
+    {
+        driverRetVal = SIM800_DriverRetVal_NOK;
+    }
     return driverRetVal;
 }
